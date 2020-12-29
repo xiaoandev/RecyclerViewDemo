@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.recyclerviewdemo.adapter.RecycleAdapter;
+import com.example.recyclerviewdemo.bean.Circle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private Button addItem;
     private RecycleAdapter adapter;
-    private List<String> list = new ArrayList<String>();
+    private List<Circle> list = new ArrayList<Circle>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +52,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     }
 
-    protected ArrayList<String> initData() {
-        ArrayList<String> mDatas = new ArrayList<String>();
-        for (int i = 0; i < 1; i++) {
-            mDatas.add("我是商品" + i);
-        }
+    protected ArrayList<Circle> initData() {
+        ArrayList<Circle> mDatas = new ArrayList<Circle>();
+
         return mDatas;
     }
 }

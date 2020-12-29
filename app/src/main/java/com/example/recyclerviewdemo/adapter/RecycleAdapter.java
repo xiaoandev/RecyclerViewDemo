@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHolder> {
     private Context context;
-    private List<String> list;
-    public RecycleAdapter(Context context, List<String> list) {
+    private List<Circle> list;
+    public RecycleAdapter(Context context, List<Circle> list) {
         this.context = context;
         this.list = list;
     }
@@ -36,7 +36,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
     }
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        holder.item_content.setText(list.get(position));
+        holder.item_content.setText(list.get(position).getContent());
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +57,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
     // 添加数据
     public void addData(int position) {
 //   在list中添加数据，并通知条目加入一条
+
         list.add(position, "我是商品" + position);
         CircleUtil.insertCircle("我是商品" + position, null);
         //添加动画
