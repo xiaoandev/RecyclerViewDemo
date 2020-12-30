@@ -5,12 +5,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.hardware.ConsumerIrManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.recyclerviewdemo.adapter.RecycleAdapter;
 import com.example.recyclerviewdemo.bean.Circle;
+
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +29,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        LitePal.getDatabase();
         initRecycle();
+//        initData();
+//        List<Circle> circles = DataSupport.findAll(Circle.class);
+//        adapter.setNewData(circles);
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //       添加自带默认动画
-                adapter.addData(list.size());
+                Circle circle = new Circle("dasda", null);
+                adapter.insert(circle, 0);
 
             }
         });
@@ -42,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(linearLayoutManager);
 //   获取数据，向适配器传数据，绑定适配器
         list = initData();
+//        list = CircleUtil.findAllCircle();
         adapter = new RecycleAdapter(MainActivity.this, list);
         mRecyclerView.setAdapter(adapter);
 //   添加动画
@@ -52,9 +61,22 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     }
 
-    protected ArrayList<Circle> initData() {
-        ArrayList<Circle> mDatas = new ArrayList<Circle>();
+    private List<Circle> initData() {
+//        List<Circle> circles = new ArrayList<>();
+        List<Circle> circles = LitePal.findAll(Circle.class);
+        for (Circle circle : circles) {
+            circles.add(circle);
+        }
 
-        return mDatas;
+//        circles.add(new Circle("1", null));
+//        circles.add(new Circle("2", null));
+//        circles.add(new Circle("3", null));
+//        circles.add(new Circle("4", null));
+//        circles.add(new Circle("5", null));
+//        circles.add(new Circle("6", null));
+//        circles.add(new Circle("7", null));
+//        circles.add(new Circle("8", null));
+//        return DataSupport.findAll(Circle.class);
+        return circles;
     }
 }

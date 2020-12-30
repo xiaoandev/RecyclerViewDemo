@@ -4,8 +4,10 @@ import android.widget.ImageView;
 
 import com.example.recyclerviewdemo.bean.Circle;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 import org.litepal.tablemanager.Connector;
+
+import java.util.List;
 
 public class CircleUtil {
 
@@ -16,14 +18,14 @@ public class CircleUtil {
      * @return
      */
     public static boolean insertCircle(String content, ImageView imageView) {
-        Circle circle = new Circle();
+        Circle circle = null;
         if (content != null)
             circle.setContent(content);
         if (imageView != null)
             circle.setImageView(imageView);
 
         //创建数据库
-        Connector.getDatabase();
+        LitePal.getDatabase();
         return circle.save();
     }
 
@@ -32,6 +34,13 @@ public class CircleUtil {
      * @param position
      */
     public static void deleteCircle(int position) {
-        DataSupport.delete(Circle.class, position);
+        LitePal.delete(Circle.class, position);
+//        LitePalSupport.delete(Circle.class, position);
+    }
+
+
+    public static List<Circle> findAllCircle() {
+        List<Circle> circles = LitePal.findAll(Circle.class);
+        return circles;
     }
 }

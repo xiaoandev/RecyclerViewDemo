@@ -2,9 +2,9 @@ package com.example.recyclerviewdemo.bean;
 
 import android.widget.ImageView;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
-public class Circle extends DataSupport {
+public class Circle extends LitePalSupport {
 
     /**
      * 文字内容
@@ -14,6 +14,11 @@ public class Circle extends DataSupport {
      * 图片
      */
     private ImageView imageView;
+
+    public Circle(String content, ImageView imageView) {
+        this.content = content;
+        this.imageView = imageView;
+    }
 
     public String getContent() {
         return content;

@@ -1,17 +1,14 @@
 package com.example.recyclerviewdemo;
 
-import org.litepal.LitePalApplication;
+import android.app.Application;
 
-public class BaseApplication extends LitePalApplication {
-    private static BaseApplication instance = null;
+import org.litepal.LitePal;
+
+public class BaseApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        this.instance = this;
-    }
-
-    public static BaseApplication getInstance() {
-        return instance;
+        LitePal.initialize(this);
     }
 }

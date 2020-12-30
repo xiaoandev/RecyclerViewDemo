@@ -10,19 +10,23 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.recyclerviewdemo.BaseApplication;
+import com.example.recyclerviewdemo.MainActivity;
 import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.bean.Circle;
 import com.example.recyclerviewdemo.utils.CircleUtil;
 import com.example.recyclerviewdemo.view.ExpandTextView;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.litepal.LitePal;
+
 import java.util.List;
 /**
  * Created by qzs on 2017/9/04.
  */
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHolder> {
-    private Context context;
     private List<Circle> list;
+    private Context context;
     public RecycleAdapter(Context context, List<Circle> list) {
         this.context = context;
         this.list = list;
@@ -30,7 +34,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyViewHolder holder = new MyViewHolder(LayoutInflater.from(
-                context).inflate(R.layout.item_video, parent,
+                parent.getContext()).inflate(R.layout.item_video, parent,
                 false));
         return holder;
     }
@@ -54,12 +58,40 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         return list.size();
     }
 
+    /**
+     * 初次加载、或下拉刷新要替换全部旧数据时刷新数据
+     * @param mData
+     */
+    public void setNewData(List<Circle> mData) {
+
+        list.clear();
+        list.addAll(mData);
+        notifyDataSetChanged();
+    }
+
+
+    /**
+     * 添加单个数据到指定位置
+     *
+     * @param data
+     * @param position
+     */
+    public void insert(Circle data, int position) {
+        if (position > list.size() || position < 0) {
+            return;
+        }
+        list.add(position, data);
+        notifyItemInserted(position);
+    }
+
     // 添加数据
     public void addData(int position) {
 //   在list中添加数据，并通知条目加入一条
 
-        list.add(position, "我是商品" + position);
         CircleUtil.insertCircle("我是商品" + position, null);
+        list = LitePal.findAll(Circle.class);
+
+//        list.add(position, "我是商品" + position);
         //添加动画
         notifyItemInserted(position);
     }
