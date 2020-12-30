@@ -1,17 +1,17 @@
 package com.example.recyclerviewdemo.adapter;
 
 import android.content.Context;
-import android.content.Intent;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.recyclerviewdemo.BaseApplication;
-import com.example.recyclerviewdemo.MainActivity;
 import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.bean.Circle;
 import com.example.recyclerviewdemo.utils.CircleUtil;
@@ -25,12 +25,36 @@ import java.util.List;
  * Created by qzs on 2017/9/04.
  */
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHolder> {
-    private List<Circle> list;
+    private List<Circle> circleList;
     private Context context;
-    public RecycleAdapter(Context context, List<Circle> list) {
-        this.context = context;
-        this.list = list;
+
+    public RecycleAdapter() {
     }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    /**
+     * 获取全部数据
+     * @return
+     */
+    public List<Circle> getCircleList() {
+        return circleList;
+    }
+
+    /**
+     * 初次加载、或下拉刷新要替换全部旧数据时刷新数据
+     * @param circleList
+     */
+    public void setCircleList(List<Circle> circleList) {
+
+        this.circleList = circleList;
+//        circleList.clear();
+//        circleList.addAll(mData);
+//        notifyDataSetChanged();
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyViewHolder holder = new MyViewHolder(LayoutInflater.from(
@@ -40,14 +64,16 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
     }
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        holder.item_content.setText(list.get(position).getContent());
+        holder.item_content.setText(circleList.get(position).getContent());
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (list.size() == 1) {
+                if (circleList.size() == 1) {
                     Snackbar.make(v, "此条目不能删除", Snackbar.LENGTH_SHORT).show();
                 } else {
                     removeData(position);
+                    int rowAffect = LitePal.delete(Circle.class, circleList.get(position).getId());
+                    Log.d("Adapter", "remove " + rowAffect);
                 }
             }
         });
@@ -55,20 +81,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return circleList.size();
     }
-
-    /**
-     * 初次加载、或下拉刷新要替换全部旧数据时刷新数据
-     * @param mData
-     */
-    public void setNewData(List<Circle> mData) {
-
-        list.clear();
-        list.addAll(mData);
-        notifyDataSetChanged();
-    }
-
 
     /**
      * 添加单个数据到指定位置
@@ -77,21 +91,21 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
      * @param position
      */
     public void insert(Circle data, int position) {
-        if (position > list.size() || position < 0) {
+        if (position > circleList.size() || position < 0) {
             return;
         }
-        list.add(position, data);
+        circleList.add(position, data);
         notifyItemInserted(position);
     }
 
     // 添加数据
     public void addData(int position) {
-//   在list中添加数据，并通知条目加入一条
+//   在circleList中添加数据，并通知条目加入一条
 
-        CircleUtil.insertCircle("我是商品" + position, null);
-        list = LitePal.findAll(Circle.class);
+        CircleUtil.insertCircle("我是商品" + position);
+        circleList = LitePal.findAll(Circle.class);
 
-//        list.add(position, "我是商品" + position);
+//        circleList.add(position, "我是商品" + position);
         //添加动画
         notifyItemInserted(position);
     }
@@ -103,9 +117,10 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         alert.setMessage("你确定要删除吗?");
         alert.setNegativeButton("取消", null);
         alert.setPositiveButton("确定", (dialog, which) -> {
-            list.remove(position);
+            circleList.remove(position);
+            Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
             //删除动画
-//        notifyItemRemoved(position);
+            notifyItemRemoved(position);
             notifyDataSetChanged();
             //调接口删除,这里写死
             dialog.dismiss();

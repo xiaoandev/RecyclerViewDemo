@@ -14,15 +14,14 @@ public class CircleUtil {
     /**
      * 添加数据
      * @param content
-     * @param imageView
      * @return
      */
-    public static boolean insertCircle(String content, ImageView imageView) {
+    public static boolean insertCircle(String content) {
         Circle circle = null;
         if (content != null)
             circle.setContent(content);
-        if (imageView != null)
-            circle.setImageView(imageView);
+//        if (imageView != null)
+//            circle.setImageView(imageView);
 
         //创建数据库
         LitePal.getDatabase();

@@ -6,18 +6,31 @@ import org.litepal.crud.LitePalSupport;
 
 public class Circle extends LitePalSupport {
 
+
+    private Long id;
     /**
      * 文字内容
      */
     private String content;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     /**
      * 图片
      */
-    private ImageView imageView;
+//    private ImageView imageView;
 
-    public Circle(String content, ImageView imageView) {
+
+
+    public Circle(String content) {
         this.content = content;
-        this.imageView = imageView;
+//        this.imageView = imageView;
     }
 
     public String getContent() {
@@ -28,11 +41,11 @@ public class Circle extends LitePalSupport {
         this.content = content;
     }
 
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
-    }
+//    public ImageView getImageView() {
+////        return imageView;
+////    }
+////
+////    public void setImageView(ImageView imageView) {
+////        this.imageView = imageView;
+////    }
 }
