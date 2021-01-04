@@ -13,6 +13,16 @@ public class Circle extends LitePalSupport {
      */
     private String content;
 
+    /**
+     * 图片
+     */
+//    private ImageView imageView;
+
+    /**
+     * 发布时间
+     */
+    private String publishTime;
+
     public Long getId() {
         return id;
     }
@@ -21,12 +31,7 @@ public class Circle extends LitePalSupport {
         this.id = id;
     }
 
-    /**
-     * 图片
-     */
-//    private ImageView imageView;
-
-
+    public Circle() {}
 
     public Circle(String content) {
         this.content = content;
@@ -48,4 +53,13 @@ public class Circle extends LitePalSupport {
 ////    public void setImageView(ImageView imageView) {
 ////        this.imageView = imageView;
 ////    }
+
+
+    public String getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
+    }
 }

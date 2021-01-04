@@ -65,6 +65,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.item_content.setText(circleList.get(position).getContent());
+        holder.item_publish_time.setText(circleList.get(position).getPublishTime());
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,13 +133,18 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
      * ViewHolder的类，用于缓存控件
      */
     class MyViewHolder extends RecyclerView.ViewHolder {
+        //发布内容
         ExpandTextView item_content;
+        //删除按钮
         TextView item_delete;
+        //发布时间
+        TextView item_publish_time;
         //因为删除有可能会删除中间条目，然后会造成角标越界，所以必须整体刷新一下！
         public MyViewHolder(View view) {
             super(view);
             item_content = (ExpandTextView) view.findViewById(R.id.tv_content);
             item_delete = (TextView) view.findViewById(R.id.tv_delete);
+            item_publish_time = (TextView) view.findViewById(R.id.tv_time);
         }
     }
 }

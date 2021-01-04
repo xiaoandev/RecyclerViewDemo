@@ -7,10 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.hardware.ConsumerIrManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -52,10 +50,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,AddCircleActivity.class);
                 startActivityForResult(intent,1);
-//                adapter.insert(circle, 0);
-//                Circle circle = new Circle("dasda");
-//                circle.save();
-//                initData(mRecyclerView);
             }
         });
 
@@ -88,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         initData(mRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-
 
     private void initView() {
         addItem = (FloatingActionButton) findViewById(R.id.add_item);
