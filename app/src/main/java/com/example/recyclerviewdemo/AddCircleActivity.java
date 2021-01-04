@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.recyclerviewdemo.activity.SystemGalleryActivity;
 import com.example.recyclerviewdemo.bean.Circle;
 
 import java.text.ParseException;
@@ -21,6 +22,7 @@ public class AddCircleActivity extends AppCompatActivity {
 
     private EditText et_circle_text;
     private Button btn_add_circle;
+    private Button btn_picture_test;
 
     private  String startTime = "2020-01-04 16:14:35";//初始时间
     private long formattingTime;
@@ -46,9 +48,18 @@ public class AddCircleActivity extends AppCompatActivity {
                 Log.d(TAG, "publishTime ---- " + publishTime);
                 Log.d(TAG, "Is save success ? ---- " + isSave);
 
-                Intent intent = new Intent();
-                setResult(RESULT_OK,intent);
-                AddCircleActivity.this.finish();
+                Intent intent = new Intent(AddCircleActivity.this, MainActivity.class);
+//                setResult(RESULT_OK,intent);
+                startActivity(intent);
+//                AddCircleActivity.this.finish();
+            }
+        });
+
+        btn_picture_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backIntent = new Intent(AddCircleActivity.this, SystemGalleryActivity.class);
+                startActivity(backIntent);
             }
         });
     }
@@ -56,6 +67,7 @@ public class AddCircleActivity extends AppCompatActivity {
     private void initView() {
         et_circle_text = (EditText) findViewById(R.id.et_circle_text);
         btn_add_circle = (Button) findViewById(R.id.btn_add_circle);
+        btn_picture_test = (Button) findViewById(R.id.btn_picture_test);
     }
 
     private String CalculateTime(String starTime) {

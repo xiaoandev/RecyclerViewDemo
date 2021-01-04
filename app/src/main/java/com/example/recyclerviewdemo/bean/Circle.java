@@ -1,10 +1,14 @@
 package com.example.recyclerviewdemo.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.ImageView;
 
 import org.litepal.crud.LitePalSupport;
 
-public class Circle extends LitePalSupport {
+import java.util.ArrayList;
+
+public class Circle extends LitePalSupport implements Parcelable {
 
 
     private Long id;
@@ -14,14 +18,53 @@ public class Circle extends LitePalSupport {
     private String content;
 
     /**
-     * 图片
-     */
-//    private ImageView imageView;
-
-    /**
      * 发布时间
      */
     private String publishTime;
+
+    /**
+     * 图片
+     */
+    public ArrayList<String> photos;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.content);
+        dest.writeStringList(this.photos);
+    }
+
+    public Circle() {}
+
+    public Circle(String content) {
+        this.content = content;
+    }
+
+    public Circle(String content, ArrayList<String> photos) {
+        this.content = content;
+        this.photos = photos;
+    }
+
+    protected Circle(Parcel in) {
+        this.content = in.readString();
+        this.photos = in.createStringArrayList();
+    }
+
+    public static final Parcelable.Creator<Circle> CREATOR = new Parcelable.Creator<Circle>() {
+        @Override
+        public Circle createFromParcel(Parcel source) {
+            return new Circle(source);
+        }
+
+        @Override
+        public Circle[] newArray(int size) {
+            return new Circle[size];
+        }
+    };
 
     public Long getId() {
         return id;
@@ -29,13 +72,6 @@ public class Circle extends LitePalSupport {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Circle() {}
-
-    public Circle(String content) {
-        this.content = content;
-//        this.imageView = imageView;
     }
 
     public String getContent() {
@@ -46,14 +82,13 @@ public class Circle extends LitePalSupport {
         this.content = content;
     }
 
-//    public ImageView getImageView() {
-////        return imageView;
-////    }
-////
-////    public void setImageView(ImageView imageView) {
-////        this.imageView = imageView;
-////    }
+    public ArrayList<String> getPhotos() {
+        return photos;
+    }
 
+    public void setPhotos(ArrayList<String> photos) {
+        this.photos = photos;
+    }
 
     public String getPublishTime() {
         return publishTime;

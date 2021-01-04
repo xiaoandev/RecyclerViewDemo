@@ -51,7 +51,23 @@
         android:background="@drawable/ic_launcher_background"
         android:scaleType="fitXY"
         app:layout_constraintLeft_toRightOf="@+id/iv_photo"
-        app:layout_constraintTop_toBottomOf="@+id/tv_content" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_content"
+        android:visibility="gone"/>
+
+    <cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout
+        android:id="@+id/item_photos"
+        style="@style/MatchWrap"
+        android:layout_width="363dp"
+        android:layout_height="0dp"
+        app:bga_npl_itemCornerRadius="0dp"
+        app:bga_npl_itemSpanCount="3"
+        app:bga_npl_itemWhiteSpacing="4dp"
+        app:bga_npl_itemWidth="0dp"
+        app:bga_npl_otherWhiteSpacing="64dp"
+        app:bga_npl_placeholderDrawable="@mipmap/bga_pp_ic_holder_light"
+        app:bga_npl_showAsLargeWhenOnlyOne="true"
+        app:layout_constraintLeft_toRightOf="@id/iv_photo"
+        app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
     <ImageView
         android:layout_width="50dp"
@@ -60,7 +76,8 @@
         app:layout_constraintBottom_toTopOf="@+id/video_view"
         app:layout_constraintLeft_toRightOf="@+id/video_view"
         app:layout_constraintRight_toLeftOf="@+id/video_view"
-        app:layout_constraintTop_toBottomOf="@+id/video_view" />
+        app:layout_constraintTop_toBottomOf="@+id/video_view"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv_address"
@@ -73,7 +90,7 @@
         android:textSize="12sp"
         android:visibility="visible"
         app:layout_constraintLeft_toRightOf="@+id/iv_photo"
-        app:layout_constraintTop_toBottomOf="@+id/video_view"
+        app:layout_constraintTop_toBottomOf="@+id/item_photos"
         app:layout_constraintRight_toRightOf="parent"
         android:maxLines="1"
         android:ellipsize="end"/>

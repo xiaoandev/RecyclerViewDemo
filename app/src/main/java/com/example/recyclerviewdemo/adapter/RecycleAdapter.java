@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
 
 import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.bean.Circle;
@@ -65,6 +66,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.item_content.setText(circleList.get(position).getContent());
+        holder.item_photos.setData(circleList.get(position).getPhotos());
         holder.item_publish_time.setText(circleList.get(position).getPublishTime());
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +137,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
     class MyViewHolder extends RecyclerView.ViewHolder {
         //发布内容
         ExpandTextView item_content;
+        //图片
+        BGANinePhotoLayout item_photos;
         //删除按钮
         TextView item_delete;
         //发布时间
@@ -143,6 +147,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         public MyViewHolder(View view) {
             super(view);
             item_content = (ExpandTextView) view.findViewById(R.id.tv_content);
+            item_photos = (BGANinePhotoLayout) view.findViewById(R.id.item_photos);
             item_delete = (TextView) view.findViewById(R.id.tv_delete);
             item_publish_time = (TextView) view.findViewById(R.id.tv_time);
         }

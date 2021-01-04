@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.recyclerviewdemo.activity.MomentAddActivity;
 import com.example.recyclerviewdemo.adapter.RecycleAdapter;
 import com.example.recyclerviewdemo.bean.Circle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,AddCircleActivity.class);
+                Intent intent = new Intent(MainActivity.this, MomentAddActivity.class);
+//                Intent intent = new Intent(MainActivity.this,AddCircleActivity.class);
                 startActivityForResult(intent,1);
             }
         });
@@ -57,12 +59,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 boolean isHasData = searchData(mRecyclerView);
-                if (isHasData) {
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    noData.setVisibility(View.GONE);
-                } else {
+                if (!isHasData) {
                     mRecyclerView.setVisibility(View.GONE);
                     noData.setVisibility(View.VISIBLE);
+                } else {
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    noData.setVisibility(View.GONE);
                 }
             }
         });
