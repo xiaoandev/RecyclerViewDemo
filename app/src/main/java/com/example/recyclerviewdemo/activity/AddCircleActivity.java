@@ -1,4 +1,4 @@
-package com.example.recyclerviewdemo;
+package com.example.recyclerviewdemo.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.recyclerviewdemo.activity.SystemGalleryActivity;
+import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.bean.Circle;
 
 import java.text.ParseException;
@@ -27,6 +27,7 @@ public class AddCircleActivity extends AppCompatActivity {
     private  String startTime = "2020-01-04 16:14:35";//初始时间
     private long formattingTime;
     private long TimeCha;
+    private String currentUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +39,10 @@ public class AddCircleActivity extends AppCompatActivity {
         btn_add_circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent userNameIntent = getIntent();
+                currentUserName = userNameIntent.getStringExtra("current_user");
                 Circle circle= new Circle();
+                circle.setUserName(currentUserName);
                 circle.setContent(et_circle_text.getText().toString());
                 circle.setPublishTime(System.currentTimeMillis());
 //                Circle circle = new Circle(et_circle_text.getText().toString());

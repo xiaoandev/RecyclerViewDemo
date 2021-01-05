@@ -11,7 +11,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.recyclerviewdemo.MainActivity;
 import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.bean.Circle;
 

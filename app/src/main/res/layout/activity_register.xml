@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/register_back"
+        android:layout_width="@dimen/default_back_btn_width"
+        android:layout_height="@dimen/default_back_btn_height"
+        android:background="@mipmap/icon_back"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="用户注册"
+        android:textSize="30dp" />
+
+    <MaterialEditText
+        android:id="@+id/register_username"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="用户名"
+        android:maxLines="1"
+        android:textSize="20dp"
+        app:floatingLabel="true"
+        app:maxCharacters="120" />
+
+    <MaterialEditText
+        android:id="@+id/register_phone"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="手机号"
+        android:maxLines="1"
+        android:textSize="20dp"
+        app:floatingLabel="true"
+        app:maxCharacters="120" />
+
+    <MaterialEditText
+        android:id="@+id/register_password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="密码"
+        android:maxLines="1"
+        android:textSize="20dp"
+        app:floatingLabel="true"
+        app:maxCharacters="120" />
+
+    <MaterialEditText
+        android:id="@+id/register_again_password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="确认密码"
+        android:maxLines="1"
+        android:textSize="20dp"
+        app:floatingLabel="true"
+        app:maxCharacters="120" />
+
+    <Button
+        android:id="@+id/register_ok_button"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/ic_button_background"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        android:text="注册"/>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="right"
+        android:layout_marginTop="10dp">
+        <!-- 显示密码 -->
+        <CheckBox
+            android:id="@+id/register_show_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="显示密码"
+            android:textSize="12dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

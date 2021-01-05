@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,19 +18,22 @@ import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
 import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.bean.Circle;
 import com.example.recyclerviewdemo.utils.CircleUtil;
+import com.example.recyclerviewdemo.view.ChoosePopupWindow;
 import com.example.recyclerviewdemo.view.ExpandTextView;
+import com.example.recyclerviewdemo.view.OnPraiseOrCommentClickListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.litepal.LitePal;
 
-import java.util.ArrayList;
 import java.util.List;
 /**
  * Created by qzs on 2017/9/04.
  */
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHolder> {
+
     private List<Circle> circleList;
     private Context context;
+    private ChoosePopupWindow choosePopupWindow;
 
     public RecycleAdapter() {
     }
@@ -70,6 +75,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         holder.item_content.setText(circleList.get(position).getContent());
 //        holder.item_photos.setData(circleList.get(position).getPhotos());
         holder.item_real_date.setText(circleList.get(position).getRealDate());
+        holder.tv_name.setText(circleList.get(position).getUserName());
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +86,13 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
                     int rowAffect = LitePal.delete(Circle.class, circleList.get(position).getId());
                     Log.d("Adapter", "remove " + rowAffect);
                 }
+            }
+        });
+
+        holder.iv_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChoosePopupWindow(view, position);
             }
         });
 
@@ -135,6 +148,71 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
     }
 
     /**
+     * 获取控件左上顶点Y坐标
+     *
+     * @param view
+     * @return
+     */
+    private int getCoordinateY(View view) {
+        int[] coordinate = new int[2];
+        view.getLocationOnScreen(coordinate);
+        return coordinate[1];
+    }
+
+    /**
+     * 点赞、评论弹框
+     * @param position
+     */
+    private void showChoosePopupWindow(View view, int position) {
+        //item 底部y坐标
+//        final int mBottomY = getCoordinateY(view) + view.getHeight();
+        if (choosePopupWindow == null) {
+            choosePopupWindow = new ChoosePopupWindow(context);
+        }
+        choosePopupWindow.setOnPraiseOrCommentClickListener(new OnPraiseOrCommentClickListener() {
+            @Override
+            public void onPraiseClick(int position) {
+                //调用点赞接口
+//                getLikeData();
+                choosePopupWindow.dismiss();
+            }
+
+            @Override
+            public void onCommentClick(int position) {
+
+//                llComment.setVisibility(View.VISIBLE);
+//                etComment.requestFocus();
+//                etComment.setHint("说点什么");
+//                to_user_id = null;
+//                KeyboardUtil.showSoftInput(this);
+                choosePopupWindow.dismiss();
+//                etComment.setText("");
+//                view.postDelayed(() -> {
+//                    int y = getCoordinateY(llComment) - 20;
+//                    //评论时滑动到对应item底部和输入框顶部对齐
+//                    recyclerView.smoothScrollBy(0, mBottomY - y);
+//                }, 300);
+            }
+
+            @Override
+            public void onClickFrendCircleTopBg() {
+
+            }
+
+            @Override
+            public void onDeleteItem(String id, int position) {
+
+            }
+//            .setTextView(isLike).
+        }).setCurrentPosition(position);
+        if (choosePopupWindow.isShowing()) {
+            choosePopupWindow.dismiss();
+        } else {
+            choosePopupWindow.showPopupWindow(view);
+        }
+    }
+
+    /**
      * ViewHolder的类，用于缓存控件
      */
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -144,15 +222,25 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         BGANinePhotoLayout item_photos;
         //删除按钮
         TextView item_delete;
+        //用户名
+        TextView tv_name;
+        //点赞评论选择按钮
+        ImageView iv_edit;
         //发布时间
         TextView item_real_date;
+        //评论框
+        LinearLayout ll_comment;
+
         //因为删除有可能会删除中间条目，然后会造成角标越界，所以必须整体刷新一下！
         public MyViewHolder(View view) {
             super(view);
             item_content = (ExpandTextView) view.findViewById(R.id.tv_content);
 //            item_photos = (BGANinePhotoLayout) view.findViewById(R.id.item_photos);
             item_delete = (TextView) view.findViewById(R.id.tv_delete);
+            iv_edit = (ImageView) view.findViewById(R.id.iv_edit);
             item_real_date = (TextView) view.findViewById(R.id.tv_time);
+            ll_comment = (LinearLayout) view.findViewById(R.id.ll_comment);
+            tv_name = (TextView) view.findViewById(R.id.tv_name);
         }
     }
 }

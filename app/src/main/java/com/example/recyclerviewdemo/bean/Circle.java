@@ -2,7 +2,6 @@ package com.example.recyclerviewdemo.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.ImageView;
 
 import org.litepal.crud.LitePalSupport;
 
@@ -12,6 +11,11 @@ public class Circle extends LitePalSupport implements Parcelable {
 
 
     private Long id;
+
+    /**
+     * 用户名
+     */
+    private String userName;
     /**
      * 文字内容
      */
@@ -77,6 +81,14 @@ public class Circle extends LitePalSupport implements Parcelable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getContent() {

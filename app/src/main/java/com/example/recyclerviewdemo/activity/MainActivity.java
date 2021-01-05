@@ -1,4 +1,4 @@
-package com.example.recyclerviewdemo;
+package com.example.recyclerviewdemo.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,21 +15,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.recyclerviewdemo.activity.MomentAddActivity;
+import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.adapter.RecycleAdapter;
 import com.example.recyclerviewdemo.bean.Circle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-
 import org.litepal.LitePal;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText inputSearch;
     private ImageView searchCircle;
     private TextView noData;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                Intent intent = new Intent(MainActivity.this, MomentAddActivity.class);
-                Intent intent = new Intent(MainActivity.this,AddCircleActivity.class);
+                Intent intent = new Intent(MainActivity.this, AddCircleActivity.class);
                 startActivityForResult(intent,1);
             }
         });
@@ -145,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
         List<Circle> circles = LitePal.findAll(Circle.class);
         List<Circle> dataList = new ArrayList<>();
 //        List circles = LitePal.order("id desc").find(Circle.class);
-
         if (!circles.equals(null)) {
             for (Circle circle : circles) {
                 String mRealDate = calculatePublishTime(circle.getPublishTime());
@@ -176,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
             List<Circle> searchDataList = new ArrayList<>();
 
             for (Circle circle : circles) {
+                String mRealDate = calculatePublishTime(circle.getPublishTime());
+                circle.setRealDate(mRealDate);
                 searchDataList.add(0, circle);
                 adapter.notifyItemInserted(0);
                 mRecyclerView.getLayoutManager().scrollToPosition(0);
