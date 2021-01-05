@@ -18,9 +18,14 @@ public class Circle extends LitePalSupport implements Parcelable {
     private String content;
 
     /**
-     * 发布时间
+     * 发布时间（毫秒）
      */
-    private String publishTime;
+    private long publishTime;
+
+    /**
+     * 标准日期（年-月-日 格式）
+     */
+    private String realDate;
 
     /**
      * 图片
@@ -90,11 +95,19 @@ public class Circle extends LitePalSupport implements Parcelable {
         this.photos = photos;
     }
 
-    public String getPublishTime() {
+    public long getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(String publishTime) {
+    public void setPublishTime(long publishTime) {
         this.publishTime = publishTime;
+    }
+
+    public String getRealDate() {
+        return realDate;
+    }
+
+    public void setRealDate(String realDate) {
+        this.realDate = realDate;
     }
 }

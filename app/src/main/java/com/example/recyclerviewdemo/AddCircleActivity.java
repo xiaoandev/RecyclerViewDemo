@@ -39,13 +39,11 @@ public class AddCircleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String publishTime = CalculateTime(startTime);
                 Circle circle= new Circle();
                 circle.setContent(et_circle_text.getText().toString());
-                circle.setPublishTime(publishTime);
+                circle.setPublishTime(System.currentTimeMillis());
 //                Circle circle = new Circle(et_circle_text.getText().toString());
                 boolean isSave =  circle.save();
-                Log.d(TAG, "publishTime ---- " + publishTime);
                 Log.d(TAG, "Is save success ? ---- " + isSave);
 
                 Intent intent = new Intent(AddCircleActivity.this, MainActivity.class);
@@ -71,6 +69,28 @@ public class AddCircleActivity extends AppCompatActivity {
     }
 
     private String CalculateTime(String starTime) {
+
+        //获得系统的时间，单位为毫秒,转换为妙
+        long totalMilliSeconds = System.currentTimeMillis();
+        long totalSeconds = totalMilliSeconds / 1000;
+
+        //求出现在的秒
+        long currentSecond = totalSeconds % 60;
+
+        //求出现在的分
+        long totalMinutes = totalSeconds / 60;
+        long currentMinute = totalMinutes % 60;
+
+        //求出现在的小时
+        long totalHour = totalMinutes / 60;
+        long currentHour = totalHour % 24;
+
+        //显示时间
+        System.out.println("总毫秒为： " + totalMilliSeconds);
+        System.out.println(currentHour + ":" + currentMinute + ":" + currentSecond + " GMT");
+
+
+
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long currentTime = calendar.getTimeInMillis();//获取系统当先时间的毫秒值

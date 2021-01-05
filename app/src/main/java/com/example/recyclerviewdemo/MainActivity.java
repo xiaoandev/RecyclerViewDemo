@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,10 +23,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.litepal.LitePal;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final static String TAG = MainActivity.class.getSimpleName();
 
     private FloatingActionButton addItem;
     private RecycleAdapter adapter;
@@ -49,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MomentAddActivity.class);
-//                Intent intent = new Intent(MainActivity.this,AddCircleActivity.class);
+//                Intent intent = new Intent(MainActivity.this, MomentAddActivity.class);
+                Intent intent = new Intent(MainActivity.this,AddCircleActivity.class);
                 startActivityForResult(intent,1);
             }
         });
@@ -93,6 +101,40 @@ public class MainActivity extends AppCompatActivity {
         noData = (TextView) findViewById(R.id.no_data);
     }
 
+    private String calculatePublishTime(long publishTime) {
+
+        long currentTime = System.currentTimeMillis();
+        long timeCha = (currentTime - publishTime) / 1000; // 将毫秒转换成秒
+        Log.d(TAG, "timeCha is ---- " + timeCha + " 秒");
+
+        if (timeCha >= 0 & timeCha < 60) {
+            return "刚刚";
+        } else if (timeCha >= 60 && timeCha < 3600) {
+            return (timeCha / 60) + "分钟前";
+        } else if (timeCha >= 3600 && timeCha < 3600 * 24) {
+            return (timeCha / 3600) + "小时前";
+        } else if (timeCha >= 3600 * 1 * 24 && timeCha < 3600 * 2 * 24) {
+            return "1天前";
+        } else if (timeCha >= 3600 * 2 * 24 && timeCha < 3600 * 3 * 24) {
+            return "2天前";
+        } else if (timeCha >= 3600 * 3 * 24 && timeCha < 3600 * 4 * 24) {
+            return "3天前";
+        } else {
+//            System.setProperty("user.timezone", "Asia/Shanghai");
+//            TimeZone timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+//            TimeZone.setDefault(timeZone);
+////            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            Date currentDate = new Date(publishTime);
+//            String dataStr = simpleDateFormat.format(currentDate);
+//            System.out.println("currentTime="+currentTime);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String dataStr = dateFormat.format(publishTime);
+            Log.d(TAG, "publishTime is ----" + dataStr);
+            return dataStr;
+        }
+    }
+
     /**
      * 初始化数据
      * @param view
@@ -104,10 +146,14 @@ public class MainActivity extends AppCompatActivity {
         List<Circle> dataList = new ArrayList<>();
 //        List circles = LitePal.order("id desc").find(Circle.class);
 
-        for (Circle circle : circles) {
-            dataList.add(0, circle);
-            adapter.notifyItemInserted(0);
-            mRecyclerView.getLayoutManager().scrollToPosition(0);
+        if (!circles.equals(null)) {
+            for (Circle circle : circles) {
+                String mRealDate = calculatePublishTime(circle.getPublishTime());
+                circle.setRealDate(mRealDate);
+                dataList.add(0, circle);
+                adapter.notifyItemInserted(0);
+                mRecyclerView.getLayoutManager().scrollToPosition(0);
+            }
         }
         adapter.setCircleList(dataList);
         view.setAdapter(adapter);

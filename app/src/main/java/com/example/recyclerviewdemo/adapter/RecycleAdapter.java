@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.litepal.LitePal;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Created by qzs on 2017/9/04.
@@ -63,11 +64,12 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
                 false));
         return holder;
     }
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.item_content.setText(circleList.get(position).getContent());
-        holder.item_photos.setData(circleList.get(position).getPhotos());
-        holder.item_publish_time.setText(circleList.get(position).getPublishTime());
+//        holder.item_photos.setData(circleList.get(position).getPhotos());
+        holder.item_real_date.setText(circleList.get(position).getRealDate());
         holder.item_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,11 +82,12 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
                 }
             }
         });
+
     }
 
     @Override
     public int getItemCount() {
-        return circleList.size();
+        return circleList == null ? 0 : circleList.size();
     }
 
     /**
@@ -142,14 +145,14 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         //删除按钮
         TextView item_delete;
         //发布时间
-        TextView item_publish_time;
+        TextView item_real_date;
         //因为删除有可能会删除中间条目，然后会造成角标越界，所以必须整体刷新一下！
         public MyViewHolder(View view) {
             super(view);
             item_content = (ExpandTextView) view.findViewById(R.id.tv_content);
-            item_photos = (BGANinePhotoLayout) view.findViewById(R.id.item_photos);
+//            item_photos = (BGANinePhotoLayout) view.findViewById(R.id.item_photos);
             item_delete = (TextView) view.findViewById(R.id.tv_delete);
-            item_publish_time = (TextView) view.findViewById(R.id.tv_time);
+            item_real_date = (TextView) view.findViewById(R.id.tv_time);
         }
     }
 }
