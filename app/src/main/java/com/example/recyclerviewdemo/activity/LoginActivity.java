@@ -78,7 +78,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 boolean flag = UserHelpUtil.findNameAndPwd(username, password);
                 if (flag) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("current_user", username);
+                    intent.putExtra("login_user", username);
                     startActivity(intent);
                     Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
                     //检查复选框是否被选中

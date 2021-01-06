@@ -70,31 +70,32 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         return holder;
     }
 
+    //绑定
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.item_content.setText(circleList.get(position).getContent());
 //        holder.item_photos.setData(circleList.get(position).getPhotos());
         holder.item_real_date.setText(circleList.get(position).getRealDate());
         holder.tv_name.setText(circleList.get(position).getUserName());
-        holder.item_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (circleList.size() == 1) {
-                    Snackbar.make(v, "此条目不能删除", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    removeData(position);
-                    int rowAffect = LitePal.delete(Circle.class, circleList.get(position).getId());
-                    Log.d("Adapter", "remove " + rowAffect);
-                }
-            }
-        });
+//        holder.item_delete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (circleList.size() == 1) {
+//                    Snackbar.make(v, "此条目不能删除", Snackbar.LENGTH_SHORT).show();
+//                } else {
+//                    removeData(position);
+//                    int rowAffect = LitePal.delete(Circle.class, circleList.get(position).getId());
+//                    Log.d("Adapter", "remove " + rowAffect);
+//                }
+//            }
+//        });
 
-        holder.iv_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showChoosePopupWindow(view, position);
-            }
-        });
+//        holder.iv_edit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showChoosePopupWindow(view, position);
+//            }
+//        });
 
     }
 
@@ -129,7 +130,10 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         notifyItemInserted(position);
     }
 
-    // 删除数据
+    /**
+     * 删除数据
+     * @param position
+     */
     public void removeData(int position) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(context);
         alert.setTitle("提示");
@@ -137,6 +141,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         alert.setNegativeButton("取消", null);
         alert.setPositiveButton("确定", (dialog, which) -> {
             circleList.remove(position);
+            int rowAffect = LitePal.delete(Circle.class, circleList.get(position).getId());
+            Log.d("Adapter", "remove " + rowAffect);
             Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
             //删除动画
             notifyItemRemoved(position);
@@ -145,6 +151,19 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
             dialog.dismiss();
         });
         alert.show();
+    }
+
+    /**
+     * 判断进行删除操作的是否是用户本人
+     * @param loginUserName
+     * @param removePosition
+     * @return
+     */
+    public boolean isSameUser(String loginUserName, int removePosition) {
+        String userName = circleList.get(removePosition).getUserName();
+        if (userName.equals(loginUserName))
+            return true;
+        return false;
     }
 
     /**
@@ -163,7 +182,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
      * 点赞、评论弹框
      * @param position
      */
-    private void showChoosePopupWindow(View view, int position) {
+    public void showChoosePopupWindow(View view, int position) {
         //item 底部y坐标
 //        final int mBottomY = getCoordinateY(view) + view.getHeight();
         if (choosePopupWindow == null) {
@@ -212,12 +231,25 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         }
     }
 
-    /**
-     * ViewHolder的类，用于缓存控件
-     */
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    //=======================以下为item中的button控件点击事件处理===================================
+
+    //第一步：自定义一个回调接口来实现Click和LongClick事件
+    public interface OnItemClickListener  {
+        void onItemClick(View v, int position);
+        void onItemLongClick(View v);
+    }
+
+    public OnItemClickListener mOnItemClickListener;//第二步：声明自定义的接口
+
+    //第三步：定义方法并暴露给外面的调用者
+    public void setOnItemClickListener(OnItemClickListener  listener) {
+        this.mOnItemClickListener  = listener;
+    }
+
+    //第一个item类型
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //发布内容
-        ExpandTextView item_content;
+        TextView item_content;
         //图片
         BGANinePhotoLayout item_photos;
         //删除按钮
@@ -232,16 +264,99 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
         LinearLayout ll_comment;
 
         //因为删除有可能会删除中间条目，然后会造成角标越界，所以必须整体刷新一下！
-        public MyViewHolder(View view) {
-            super(view);
-            item_content = (ExpandTextView) view.findViewById(R.id.tv_content);
-//            item_photos = (BGANinePhotoLayout) view.findViewById(R.id.item_photos);
-            item_delete = (TextView) view.findViewById(R.id.tv_delete);
-            iv_edit = (ImageView) view.findViewById(R.id.iv_edit);
-            item_real_date = (TextView) view.findViewById(R.id.tv_time);
-            ll_comment = (LinearLayout) view.findViewById(R.id.ll_comment);
-            tv_name = (TextView) view.findViewById(R.id.tv_name);
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            item_content = (TextView) itemView.findViewById(R.id.tv_content);
+//            item_photos = (BGANinePhotoLayout) v.findViewById(R.id.item_photos);
+            item_delete = (TextView) itemView.findViewById(R.id.tv_delete);
+            iv_edit = (ImageView) itemView.findViewById(R.id.iv_edit);
+            item_real_date = (TextView) itemView.findViewById(R.id.tv_time);
+            ll_comment = (LinearLayout) itemView.findViewById(R.id.ll_comment);
+            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+
+            item_delete.setOnClickListener(this);
+            iv_edit.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onItemClick(v, getAdapterPosition());
+            }
         }
     }
+
+
+//    /**
+//     * ViewHolder的类，用于缓存控件
+//     */
+//    class MyViewHolder extends RecyclerView.ViewHolder {
+//        //发布内容
+//        TextView item_content;
+//        //图片
+//        BGANinePhotoLayout item_photos;
+//        //删除按钮
+//        TextView item_delete;
+//        //用户名
+//        TextView tv_name;
+//        //点赞评论选择按钮
+//        ImageView iv_edit;
+//        //发布时间
+//        TextView item_real_date;
+//        //评论框
+//        LinearLayout ll_comment;
+//
+//        //因为删除有可能会删除中间条目，然后会造成角标越界，所以必须整体刷新一下！
+//        public MyViewHolder(View itemView) {
+//            super(itemView);
+//            item_content = (TextView) itemView.findViewById(R.id.tv_content);
+////            item_photos = (BGANinePhotoLayout) v.findViewById(R.id.item_photos);
+//            item_delete = (TextView) itemView.findViewById(R.id.tv_delete);
+//            iv_edit = (ImageView) itemView.findViewById(R.id.iv_edit);
+//            item_real_date = (TextView) itemView.findViewById(R.id.tv_time);
+//            ll_comment = (LinearLayout) itemView.findViewById(R.id.ll_comment);
+//            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+//
+//            item_delete.setOnClickListener(RecycleAdapter.this);
+//            iv_edit.setOnClickListener(RecycleAdapter.this);
+//        }
+//    }
+//
+//    //=======================以下为item中的button控件点击事件处理===================================
+//
+//    //item里面有多个控件可以点击（item+item内部控件）
+//    public enum ViewName {
+//        ITEM,
+//        PRACTISE
+//    }
+//
+//    //自定义一个回调接口来实现Click和LongClick事件
+//    public interface OnItemClickListener  {
+//        void onItemClick(View v, ViewName viewName, int position);
+//        void onItemLongClick(View v);
+//    }
+//
+//    private OnItemClickListener mOnItemClickListener;//声明自定义的接口
+//
+//    //定义方法并传给外面的使用者
+//    public void setOnItemClickListener(OnItemClickListener  listener) {
+//        this.mOnItemClickListener  = listener;
+//    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        int position = (int) v.getTag();      //getTag()获取数据
+//        if (mOnItemClickListener != null) {
+//            switch (v.getId()) {
+//                case R.id.recycler_view:
+//                    mOnItemClickListener.onItemClick(v, ViewName.PRACTISE, position);
+//                    break;
+//                default:
+//                    mOnItemClickListener.onItemClick(v, ViewName.ITEM, position);
+//                    break;
+//            }
+//        }
+//    }
+
 }
 

@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView searchCircle;
     private TextView noData;
 
+    private String loginUserName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                Intent intent = new Intent(MainActivity.this, MomentAddActivity.class);
                 Intent intent = new Intent(MainActivity.this, AddCircleActivity.class);
+                intent.putExtra("current_user", loginUserName);
                 startActivityForResult(intent,1);
             }
         });
@@ -85,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         initData(mRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        adapter.setOnItemClickListener(circleItemClickListener);
     }
 
     private void initView() {
@@ -93,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
         inputSearch = (EditText) findViewById(R.id.input_search);
         searchCircle = (ImageView) findViewById(R.id.search_circle);
         noData = (TextView) findViewById(R.id.no_data);
+
+        Intent userNameIntent = getIntent();
+        loginUserName = userNameIntent.getStringExtra("login_user");
     }
 
     private String calculatePublishTime(long publishTime) {
@@ -182,6 +189,38 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+    /**
+     * item＋item里的控件点击监听事件
+     */
+    private RecycleAdapter.OnItemClickListener circleItemClickListener = new RecycleAdapter.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(View v, int position) {
+            //viewName可区分item及item内部控件
+            switch (v.getId()) {
+                case R.id.tv_delete:
+                    if (adapter.isSameUser(loginUserName, position))
+                        adapter.removeData(position);
+                    else
+                        Toast.makeText(MainActivity.this, "仅用户本人可删除!", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.iv_edit:
+                    adapter.showChoosePopupWindow(v, position);
+//                    Toast.makeText(MainActivity.this, "你点击了编辑按钮"+(position+1), Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Toast.makeText(MainActivity.this,"你点击了item按钮"+(position+1),Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+
+        @Override
+        public void onItemLongClick(View v) {
+
+        }
+    };
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
