@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -26,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText inputSearch;
     private ImageView searchCircle;
     private TextView noData;
+    private SwipeRefreshLayout mSwipeLayout;
 
     private String loginUserName;
 
@@ -47,9 +51,12 @@ public class MainActivity extends AppCompatActivity {
         initView();
         LitePal.getDatabase();
         initRecycle();
-//        initData();
-//        List<Circle> circles = DataSupport.findAll(Circle.class);
-//        adapter.setNewData(circles);
+
+        //绑定刷新时间
+        mSwipeLayout.setOnRefreshListener(this);
+        //设置颜色
+        mSwipeLayout.setColorSchemeColors(Color.RED, Color.BLUE);
+
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,12 +87,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         // 获取数据，向适配器传数据，绑定适配器
-//        list = initData();
-//        list = CircleUtil.findAllCircle();
         adapter = new RecycleAdapter();
-//        mRecyclerView.setAdapter(adapter);
-        //  添加动画
-
         initData(mRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         adapter.setOnItemClickListener(circleItemClickListener);
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         inputSearch = (EditText) findViewById(R.id.input_search);
         searchCircle = (ImageView) findViewById(R.id.search_circle);
         noData = (TextView) findViewById(R.id.no_data);
+        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_circle);
 
         Intent userNameIntent = getIntent();
         loginUserName = userNameIntent.getStringExtra("login_user");
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 //            System.setProperty("user.timezone", "Asia/Shanghai");
 //            TimeZone timeZone = TimeZone.getTimeZone("Asia/Shanghai");
 //            TimeZone.setDefault(timeZone);
-////            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //            Date currentDate = new Date(publishTime);
 //            String dataStr = simpleDateFormat.format(currentDate);
@@ -147,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
         List<Circle> dataList = new ArrayList<>();
 //        List circles = LitePal.order("id desc").find(Circle.class);
         if (!circles.equals(null)) {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.GONE);
             for (Circle circle : circles) {
                 String mRealDate = calculatePublishTime(circle.getPublishTime());
                 circle.setRealDate(mRealDate);
@@ -154,9 +159,12 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyItemInserted(0);
                 mRecyclerView.getLayoutManager().scrollToPosition(0);
             }
+            adapter.setCircleList(dataList);
+            view.setAdapter(adapter);
+        } else {
+            mRecyclerView.setVisibility(View.GONE);
+            noData.setVisibility(View.VISIBLE);
         }
-        adapter.setCircleList(dataList);
-        view.setAdapter(adapter);
     }
 
     /**
@@ -221,12 +229,24 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             initData(mRecyclerView);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //停止刷新
+                mSwipeLayout.setRefreshing(false);
+                //获取最新数据
+                initData(mRecyclerView);
+            }
+        }, 3000);
     }
 }

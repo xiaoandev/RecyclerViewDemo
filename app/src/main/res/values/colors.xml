@@ -31,4 +31,5 @@
     <color name="colorTransparent">#5CDBE2DE</color>
 
     <color name="menu_green">#45c01a</color>
+    <color name="dark_gray">#cccc</color>
 </resources>

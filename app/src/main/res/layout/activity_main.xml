@@ -17,14 +17,16 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/search_input_shape"
             android:hint="请输入搜索内容..."/>
 
         <ImageView
             android:id="@+id/search_circle"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:background="@mipmap/icon_search_click"/>
     </LinearLayout>
 
@@ -47,23 +49,35 @@
         app:pressedTranslationZ="6dp"
         app:rippleColor="#ffe5e5e5" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_circle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/search_bar"
-        android:visibility="visible"/>
+        android:layout_marginTop="10dp">
 
-    <TextView
-        android:id="@+id/no_data"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/search_bar"
-        android:text="没有相关数据"
-        android:textSize="25sp"
-        android:gravity="center"
-        android:visibility="gone"
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/no_data"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="没有相关数据"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
 </RelativeLayout>
