@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -29,18 +31,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener , View.OnClickListener{
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
-    private FloatingActionButton addItem;
+    private FloatingActionButton addItemBtn;
     private RecycleAdapter adapter;
     private List<Circle> list = new ArrayList<Circle>();
     private RecyclerView mRecyclerView;
-    private EditText inputSearch;
-    private ImageView searchCircle;
+    private EditText inputSearchContent;
+    private ImageView searchCircleBtn;
     private TextView noData;
     private SwipeRefreshLayout mSwipeLayout;
+    private ImageView searchContentDelBtn;
 
     private String loginUserName;
 
@@ -57,29 +60,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //设置颜色
         mSwipeLayout.setColorSchemeColors(Color.RED, Color.BLUE);
 
-        addItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, MomentAddActivity.class);
-                Intent intent = new Intent(MainActivity.this, AddCircleActivity.class);
-                intent.putExtra("current_user", loginUserName);
-                startActivityForResult(intent,1);
-            }
-        });
-
-        searchCircle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isHasData = searchData(mRecyclerView);
-                if (!isHasData) {
-                    mRecyclerView.setVisibility(View.GONE);
-                    noData.setVisibility(View.VISIBLE);
-                } else {
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    noData.setVisibility(View.GONE);
-                }
-            }
-        });
     }
 
     private void initRecycle() {
@@ -94,13 +74,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void initView() {
-        addItem = (FloatingActionButton) findViewById(R.id.add_item);
+        addItemBtn = (FloatingActionButton) findViewById(R.id.add_item);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        inputSearch = (EditText) findViewById(R.id.input_search);
-        searchCircle = (ImageView) findViewById(R.id.search_circle);
+        inputSearchContent = (EditText) findViewById(R.id.input_search);
+        searchCircleBtn = (ImageView) findViewById(R.id.search_circle);
         noData = (TextView) findViewById(R.id.no_data);
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_circle);
+        searchContentDelBtn = (ImageView) findViewById(R.id.iv_search_delete);
 
+        addItemBtn.setOnClickListener(this);
+        searchCircleBtn.setOnClickListener(this);
+        searchContentDelBtn.setOnClickListener(this);
+        inputSearchContent.addTextChangedListener(new EditChangedListener());
         Intent userNameIntent = getIntent();
         loginUserName = userNameIntent.getStringExtra("login_user");
     }
@@ -173,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
      */
     private boolean searchData(RecyclerView view) {
 
-        String searchText = inputSearch.getText().toString().trim();
+        String searchText = inputSearchContent.getText().toString().trim();
         if (!searchText.equals(null)) {
             List<Circle> circles = LitePal.where("content like ?", "%" + searchText + "%").find(Circle.class);
 //        List<Circle> circles = LitePal.findAll(Circle.class);
@@ -228,6 +213,55 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         }
     };
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add_item:
+//                Intent intent = new Intent(MainActivity.this, MomentAddActivity.class);
+                Intent intent = new Intent(MainActivity.this, AddCircleActivity.class);
+                intent.putExtra("current_user", loginUserName);
+                startActivityForResult(intent,1);
+                break;
+            case R.id.search_circle:
+                boolean isHasData = searchData(mRecyclerView);
+                if (!isHasData) {
+                    mRecyclerView.setVisibility(View.GONE);
+                    noData.setVisibility(View.VISIBLE);
+                } else {
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    noData.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.iv_search_delete:
+                inputSearchContent.setText("");
+                searchContentDelBtn.setVisibility(View.GONE);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private class EditChangedListener implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (!"".equals(s.toString()))
+                searchContentDelBtn.setVisibility(View.VISIBLE);
+            else
+                searchContentDelBtn.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

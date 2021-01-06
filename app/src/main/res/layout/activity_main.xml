@@ -8,25 +8,71 @@
 
     <LinearLayout
         android:id="@+id/search_bar"
+        android:background="#eb4f38"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="right|center_vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/input_search"
-            android:layout_width="0dp"
+
+        <FrameLayout
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/search_input_shape"
-            android:hint="请输入搜索内容..."/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/input_search"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:drawablePadding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_input_shape"
+                android:textSize="18sp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:hint="请输入关键字"/>
+
+            <ImageView
+                android:id="@+id/iv_search_delete"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/iv_delete_bg"
+                android:layout_gravity="right|center_vertical"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+<!--        <FrameLayout-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="50dp">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/input_search"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:background="@drawable/search_input_shape"-->
+<!--                android:hint="请输入搜索内容..."/>-->
+
+<!--            <ImageView-->
+<!--                android:visibility="visible"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                android:src="@drawable/iv_delete_bg"-->
+<!--                android:id="@+id/search_iv_delete"-->
+<!--                android:layout_gravity="right|center_vertical"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:contentDescription="TODO" />-->
+<!--        </FrameLayout>-->
 
         <ImageView
             android:id="@+id/search_circle"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
             android:background="@mipmap/icon_search_click"/>
     </LinearLayout>
 

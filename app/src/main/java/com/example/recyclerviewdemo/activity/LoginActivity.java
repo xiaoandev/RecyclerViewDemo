@@ -1,6 +1,8 @@
 package com.example.recyclerviewdemo.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -23,7 +25,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private TextView registerTv;
     private TextView forgetPwd;
     private CheckBox rememberPwd;
-    private CheckBox showPwd;
+    private CheckBox autoLogin;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,48 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         initViews();
         registerListener();
 //        isShowPwd(showPwd);//设置密码显示或不显示
+
+        //判断记住密码多选框的状态
+        if(sharedPreferences.getBoolean("remember_password", false))
+        {
+            //设置默认是记录密码状态
+            rememberPwd.setChecked(true);
+            usernameEdit.setText(sharedPreferences.getString("USER_NAME", ""));
+            passwordEdit.setText(sharedPreferences.getString("PASSWORD", ""));
+            //判断自动登陆多选框状态
+            if(sharedPreferences.getBoolean("auto_login", false))
+            {
+                //设置默认是自动登录状态
+                autoLogin.setChecked(true);
+                //跳转界面
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                LoginActivity.this.startActivity(intent);
+
+            }
+        }
+
+        //监听记住密码多选框按钮事件
+        rememberPwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (rememberPwd.isChecked())
+                    sharedPreferences.edit().putBoolean("remember_password", true).commit();
+                else
+                    sharedPreferences.edit().putBoolean("remember_password", false).commit();
+            }
+        });
+
+        //监听自动登录多选框事件
+        autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (autoLogin.isChecked())
+                    sharedPreferences.edit().putBoolean("auto_login", true).commit();
+                else
+                    sharedPreferences.edit().putBoolean("auto_login", false).commit();
+            }
+        });
+
     }
 
     private void initViews() {
@@ -40,8 +85,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         loginBt = (Button)findViewById(R.id.login_button);
         registerTv = (TextView) findViewById(R.id.goto_register);
         forgetPwd = (TextView) findViewById(R.id.forget_pwd);
-        rememberPwd = (CheckBox)findViewById(R.id.remember_password);
-        showPwd = (CheckBox)findViewById(R.id.show_password);
+        rememberPwd = (CheckBox) findViewById(R.id.remember_password);
+        autoLogin = (CheckBox) findViewById(R.id.auto_login);
+
+        //获得实例对象
+        sharedPreferences = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
     }
 
     private void registerListener() {
@@ -82,9 +130,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     startActivity(intent);
                     Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
                     //检查复选框是否被选中
-                    if (!rememberPwd.isChecked()) {
-                        usernameEdit.setText("");
-                        passwordEdit.setText("");
+                    if (rememberPwd.isChecked()) {
+                        //记住用户名、密码、
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("user_name", usernameEdit.getText().toString());
+                        editor.putString("user_password",passwordEdit.getText().toString());
+                        editor.commit();
+
                     }
                 } else {
                     Toast.makeText(this, "用户名或密码不正确！", Toast.LENGTH_SHORT).show();
