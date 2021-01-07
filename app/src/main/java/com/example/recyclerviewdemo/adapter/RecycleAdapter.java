@@ -19,16 +19,11 @@ import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.bean.Circle;
 import com.example.recyclerviewdemo.utils.CircleUtil;
 import com.example.recyclerviewdemo.view.ChoosePopupWindow;
-import com.example.recyclerviewdemo.view.ExpandTextView;
 import com.example.recyclerviewdemo.view.OnPraiseOrCommentClickListener;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.litepal.LitePal;
-
 import java.util.List;
-/**
- * Created by qzs on 2017/9/04.
- */
+
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHolder> {
 
     private List<Circle> circleList;
@@ -77,26 +72,6 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyViewHo
 //        holder.item_photos.setData(circleList.get(position).getPhotos());
         holder.item_real_date.setText(circleList.get(position).getRealDate());
         holder.tv_name.setText(circleList.get(position).getUserName());
-//        holder.item_delete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (circleList.size() == 1) {
-//                    Snackbar.make(v, "此条目不能删除", Snackbar.LENGTH_SHORT).show();
-//                } else {
-//                    removeData(position);
-//                    int rowAffect = LitePal.delete(Circle.class, circleList.get(position).getId());
-//                    Log.d("Adapter", "remove " + rowAffect);
-//                }
-//            }
-//        });
-
-//        holder.iv_edit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showChoosePopupWindow(view, position);
-//            }
-//        });
-
     }
 
     @Override

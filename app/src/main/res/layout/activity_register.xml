@@ -41,7 +41,8 @@
         android:maxLines="1"
         android:textSize="20dp"
         app:floatingLabel="true"
-        app:maxCharacters="120" />
+        app:maxCharacters="120"
+        android:inputType="textPhonetic"/>
 
     <MaterialEditText
         android:id="@+id/register_password"
@@ -52,7 +53,8 @@
         android:maxLines="1"
         android:textSize="20dp"
         app:floatingLabel="true"
-        app:maxCharacters="120" />
+        app:maxCharacters="120"
+        android:inputType="textPassword"/>
 
     <MaterialEditText
         android:id="@+id/register_again_password"
@@ -63,7 +65,8 @@
         android:maxLines="1"
         android:textSize="20dp"
         app:floatingLabel="true"
-        app:maxCharacters="120" />
+        app:maxCharacters="120"
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/register_ok_button"

@@ -3,6 +3,8 @@ package com.example.recyclerviewdemo.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.bean.User;
 import com.example.recyclerviewdemo.utils.UserHelpUtil;
+import com.google.android.material.chip.ChipGroup;
 
 /**
  * 注册界面代码
@@ -58,7 +61,23 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         initViews();
         registerListener();
         isShowPwd(registerShowPwd);
+
+//        registerShowPwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (registerShowPwd.isChecked()) {
+//                    registerPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+//                    registerPwdCheck.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+//                } else {
+//                    registerPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+//                    registerPwdCheck.setTransformationMethod(PasswordTransformationMethod.getInstance());
+//                }
+//            }
+//        });
+//        registerPwd.setSelection(registerPwd.getText().length());
+//        registerPwdCheck.setSelection(registerPwdCheck.getText().length());
     }
+
 
     private void initViews() {
         registerUserName = (MaterialEditText) findViewById(R.id.register_username);
@@ -68,10 +87,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         registerBt = (Button) findViewById(R.id.register_ok_button);
         backLoginBt = (Button) findViewById(R.id.register_back);
         registerShowPwd = (CheckBox) findViewById(R.id.register_show_password);
-
     }
 
-    private void registerListener(){
+    private void registerListener() {
         registerBt.setOnClickListener(this);
         backLoginBt.setOnClickListener(this);
     }
@@ -80,7 +98,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
      * 设置密码是否可见
      * @param showPwd
      */
-    private void isShowPwd(CheckBox showPwd){
+    private void isShowPwd(CheckBox showPwd) {
         showPwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -88,19 +106,17 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     //显示明文，即设置为可见的密码
                     registerPwd.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     registerPwdCheck.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    //将光标移至末尾
                 } else {
                     //不显示明文，即设置为不可见的密码
                     registerPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     registerPwdCheck.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    //将光标移至末尾
                 }
+                //将光标移至末尾
                 registerPwd.setSelection(registerPwd.getText().length());
                 registerPwdCheck.setSelection(registerPwdCheck.getText().length());
             }
         });
     }
-
 
     @Override
     public void onClick(View v) {

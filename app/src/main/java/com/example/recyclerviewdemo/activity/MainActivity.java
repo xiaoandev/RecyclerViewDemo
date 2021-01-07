@@ -23,7 +23,9 @@ import android.widget.Toast;
 import com.example.recyclerviewdemo.R;
 import com.example.recyclerviewdemo.adapter.RecycleAdapter;
 import com.example.recyclerviewdemo.bean.Circle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.recyclerviewdemo.utils.ActivityCollectorUtil;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import org.litepal.LitePal;
 
@@ -44,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private TextView noData;
     private SwipeRefreshLayout mSwipeLayout;
     private ImageView searchContentDelBtn;
+    private FloatingActionsMenu actionMenu;
+    private FloatingActionButton publishCircle;
+    private FloatingActionButton loginOut;
 
     private String loginUserName;
 
@@ -74,7 +79,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void initView() {
-        addItemBtn = (FloatingActionButton) findViewById(R.id.add_item);
+        actionMenu = (FloatingActionsMenu) findViewById(R.id.action_menu);
+        publishCircle = (FloatingActionButton) findViewById(R.id.publish_circle);
+        loginOut = (FloatingActionButton) findViewById(R.id.login_out);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         inputSearchContent = (EditText) findViewById(R.id.input_search);
         searchCircleBtn = (ImageView) findViewById(R.id.search_circle);
@@ -82,7 +90,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_circle);
         searchContentDelBtn = (ImageView) findViewById(R.id.iv_search_delete);
 
-        addItemBtn.setOnClickListener(this);
+        publishCircle.setOnClickListener(this);
+        loginOut.setOnClickListener(this);
+
         searchCircleBtn.setOnClickListener(this);
         searchContentDelBtn.setOnClickListener(this);
         inputSearchContent.addTextChangedListener(new EditChangedListener());
@@ -179,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             view.setAdapter(adapter);
         } else
             Toast.makeText(MainActivity.this, "请输入搜索内容", Toast.LENGTH_SHORT).show();
-
         return true;
     }
 
@@ -217,11 +226,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.add_item:
+            case R.id.publish_circle:
 //                Intent intent = new Intent(MainActivity.this, MomentAddActivity.class);
                 Intent intent = new Intent(MainActivity.this, AddCircleActivity.class);
                 intent.putExtra("current_user", loginUserName);
                 startActivityForResult(intent,1);
+                break;
+            case R.id.login_out:
+                Intent loginOutIntent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(loginOutIntent);
+                Toast.makeText(MainActivity.this, "退出登录成功", Toast.LENGTH_SHORT).show();
+                ActivityCollectorUtil.finishAllActivity();
                 break;
             case R.id.search_circle:
                 boolean isHasData = searchData(mRecyclerView);
